@@ -2,8 +2,8 @@
 
 ## Male and Female Avatars
 
-![Male Avatar](./public/Male_Manavrachna_Homepage.png)
-![Female Avatar](./public/Female_Manavrachna_Homepage.png)
+![Male Avatar](./public/images/Male_Manavrachna_Homepage.png)
+![Female Avatar](./public/images/Female_Manavrachna_Homepage.png)
 
 ## Getting Started
 
@@ -13,6 +13,14 @@ First, run the development server:
 npm run dev
 # or
 yarn dev
+
+# or
+npm run build
+# or
+yarn build
+
+# and then
+elestio deploy
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
