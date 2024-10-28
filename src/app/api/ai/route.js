@@ -173,54 +173,95 @@
 //   return Response.json(JSON.parse(chatCompletion.choices[0].message.content));
 // }
 
+// import OpenAI from "openai";
+
+// // Initialize OpenAI client with API key from environment variables
+// const openai = new OpenAI({
+//    apiKey: process.env["OPENAI_API_KEY"],
+// });
+
+// // Optional function to handle file searches or document integrations
+// async function searchFiles(query) {
+//    // Placeholder implementation for searching documents
+//    return `Searching for information related to: ${query}`;
+// }
+
+// export async function GET(req) {
+//    // WARNING: Do not expose your keys
+//    // WARNING: If you host this project publicly, consider adding an authentication layer to limit API consumption.
+
+//    const userQuestion = req.nextUrl.searchParams.get("question") || "Can you help me with the courses?";
+
+//    try {
+//       const chatCompletion = await openai.chat.completions.create({
+//          messages: [
+//             {
+//                role: "system",
+//                content: `You are an AI assistant dedicated to helping parents and students explore the courses offered at Manav Rachna Institutions. Your task is to guide them through the process of selecting courses, understanding eligibility, and providing details on fees, admission, and campus visits. Tone: Polite, conversational, and friendly. Keep responses concise and relevant, answering only what’s asked based on prior responses. Throughout the conversation, ensure responses are tailored to the visitor’s needs.`,
+//             },
+//             {
+//                role: "user",
+//                content: userQuestion,
+//             },
+//          ],
+//          model: "gpt-4o", // Ensure you are using the correct model name
+//       });
+
+//       const responseContent = chatCompletion.choices[0].message.content;
+
+//       // Example: If file search integration is needed
+//       const searchResult = await searchFiles(userQuestion); // Uncomment if you implement file search logic
+
+//       // Formulate the final response
+//       const finalResponse = {
+//          message: responseContent,
+//          // searchInfo: searchResult, // If included, it should be merged properly
+//       };
+
+//       return Response.json(finalResponse);
+//    } catch (error) {
+//       console.error("Error during OpenAI request:", error);
+//       return Response.json({ error: "An error occurred while processing your request." }, { status: 500 });
+//    }
+// }
+
 import OpenAI from "openai";
 
-// Initialize OpenAI client with API key from environment variables
 const openai = new OpenAI({
-   apiKey: process.env["OPENAI_API_KEY"],
+   apiKey: process.env["OPENAI_API_KEY"], // Ensure this is set in your environment variables
 });
 
-// Optional function to handle file searches or document integrations
-async function searchFiles(query) {
-   // Placeholder implementation for searching documents
-   return `Searching for information related to: ${query}`;
-}
-
 export async function GET(req) {
-   // WARNING: Do not expose your keys
-   // WARNING: If you host this project publicly, consider adding an authentication layer to limit API consumption.
-
-   const userQuestion = req.nextUrl.searchParams.get("question") || "Can you help me with the courses?";
+   const question =
+      req.nextUrl.searchParams.get("question") ||
+      "What courses are available for undergraduate students?";
 
    try {
       const chatCompletion = await openai.chat.completions.create({
          messages: [
             {
                role: "system",
-               content: `You are an AI assistant dedicated to helping parents and students explore the courses offered at Manav Rachna Institutions. Your task is to guide them through the process of selecting courses, understanding eligibility, and providing details on fees, admission, and campus visits. Tone: Polite, conversational, and friendly. Keep responses concise and relevant, answering only what’s asked based on prior responses. Throughout the conversation, ensure responses are tailored to the visitor’s needs.`,
+               content: `You are an AI assistant dedicated to helping parents and students explore the courses offered at Manav Rachna Institutions. Your task is to guide them through the process of selecting courses, understanding eligibility, and providing details on fees, admission, and campus visits. Tone: Polite, conversational, and friendly. Keep responses concise and relevant, answering only what’s asked based on prior responses. Ensure responses are tailored to the visitor’s needs.`,
             },
             {
                role: "user",
-               content: userQuestion,
+               content: question,
             },
          ],
-         model: "gpt-4o", // Ensure you are using the correct model name
+         model: "gpt-4-turbo",
       });
 
-      const responseContent = chatCompletion.choices[0].message.content;
+      const assistantResponse = chatCompletion.choices[0].message.content;
+      console.log("Assistant Response:", assistantResponse);
 
-      // Example: If file search integration is needed
-      const searchResult = await searchFiles(userQuestion); // Uncomment if you implement file search logic
-
-      // Formulate the final response
-      const finalResponse = {
-         message: responseContent,
-         // searchInfo: searchResult, // If included, it should be merged properly
-      };
-
-      return Response.json(finalResponse);
+      // Return the assistant's response properly
+      return new Response(JSON.stringify({ answer: assistantResponse }), {
+         headers: { "Content-Type": "application/json" },
+      });
    } catch (error) {
-      console.error("Error during OpenAI request:", error);
-      return Response.json({ error: "An error occurred while processing your request." }, { status: 500 });
+      console.error("Error during querying AI:", error);
+      return new Response(JSON.stringify({ error: "Internal Server Error." }), {
+         status: 500,
+      });
    }
 }
