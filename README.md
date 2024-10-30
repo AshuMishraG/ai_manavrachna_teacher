@@ -2,7 +2,7 @@
 
 ## Video Overview
 
-![Project Video](./public/assets/AIBotDemo.mov)
+![Project Video](./public/assets/AIBotDemo.mp4)  <!-- Updated file extension to .mp4 -->
 
 ## Male and Female Avatars
 
