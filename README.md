@@ -2,7 +2,7 @@
 
 ## Video Overview
 
-![Project Video](./public/assets/Manavrachna_AIBotDemo.mov)
+![Project Video](./public/assets/AIBotDemo.mov)
 
 ## Male and Female Avatars
 
